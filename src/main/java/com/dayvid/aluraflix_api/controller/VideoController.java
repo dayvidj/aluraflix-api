@@ -7,11 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dayvid.aluraflix_api.model.DadosVideoDTO;
@@ -33,22 +33,22 @@ public class VideoController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<VideoDTO>> listarVideos() {
+	public ResponseEntity<List<DadosVideoDTO>> listarVideos() {
 		return ResponseEntity.ok(service.listarTodosVideos());
 	}
 
-	@GetMapping("/id")
-	public ResponseEntity<VideoDTO> exibirVideoPorId(@RequestParam Long id) {
+	@GetMapping("/{id}")
+	public ResponseEntity<VideoDTO> exibirVideoPorId(@PathVariable Long id) {
 		return ResponseEntity.ok(service.buscarVideo(id));
 	}
 
 	@PutMapping
-	public ResponseEntity<VideoDTO> updateVideo(@RequestBody DadosVideoDTO dadosVideo) {
+	public ResponseEntity<VideoDTO> updateVideo(@RequestBody @Valid DadosVideoDTO dadosVideo) {
 		return ResponseEntity.ok(service.atualizarVideo(dadosVideo));
 	}
 
-	@DeleteMapping("/id")
-	public ResponseEntity<String> deleteVideo(@RequestParam Long id) {
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deleteVideo(@PathVariable Long id) {
 		return ResponseEntity.ok(service.deletarVideo(id));
 	}
 

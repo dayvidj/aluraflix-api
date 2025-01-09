@@ -25,8 +25,8 @@ public class VideoService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<VideoDTO> listarTodosVideos() {
-		return repository.findAll().stream().map(VideoDTO::new).toList();
+	public List<DadosVideoDTO> listarTodosVideos() {
+		return repository.findAll().stream().map(DadosVideoDTO::new).toList();
 	}
 
 	@Transactional(readOnly = true)
@@ -51,6 +51,9 @@ public class VideoService {
 
 	@Transactional
 	public String deletarVideo(Long id) {
+		if (!repository.existsById(id)) {
+			throw new ObjetoNaoEncontadoException("Video não encontrado");
+		}
 		repository.deleteById(id);
 		return "Video deletado com sucesso.";
 	}
