@@ -28,8 +28,8 @@ public class VideoController {
 	private VideoService service;
 
 	@PostMapping
-	public ResponseEntity<VideoDTO> criarVideo(@RequestBody @Valid VideoDTO videoData) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(service.salvarVideo(videoData));
+	public ResponseEntity<VideoDTO> criarVideo(@RequestBody @Valid VideoDTO dadosVideo) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(service.salvarVideo(dadosVideo));
 	}
 
 	@GetMapping
