@@ -18,6 +18,8 @@ import com.dayvid.aluraflix_api.model.CategoriaDTO;
 import com.dayvid.aluraflix_api.model.DadosCategoriaDTO;
 import com.dayvid.aluraflix_api.service.CategoriaService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaController {
@@ -26,7 +28,7 @@ public class CategoriaController {
 	private CategoriaService service;
 
 	@PostMapping
-	public ResponseEntity<DadosCategoriaDTO> criarCategoria(@RequestBody CategoriaDTO dadosCategoria) {
+	public ResponseEntity<DadosCategoriaDTO> criarCategoria(@RequestBody @Valid CategoriaDTO dadosCategoria) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.salvarCategoria(dadosCategoria));
 	}
 
@@ -41,7 +43,7 @@ public class CategoriaController {
 	}
 
 	@PutMapping
-	public ResponseEntity<CategoriaDTO> updateCategoria(@RequestBody DadosCategoriaDTO dadosCategoria) {
+	public ResponseEntity<CategoriaDTO> updateCategoria(@RequestBody @Valid DadosCategoriaDTO dadosCategoria) {
 		return ResponseEntity.ok(service.atualizarCategoria(dadosCategoria));
 	}
 

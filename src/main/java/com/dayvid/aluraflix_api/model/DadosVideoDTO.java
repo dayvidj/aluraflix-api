@@ -7,9 +7,10 @@ public record DadosVideoDTO(
 		Long id, 
 		String titulo, 
 		String descricao, 
-		String url) {
+		String url,
+		Long categoria) {
 	
 	public DadosVideoDTO(Video video) {
-		this(video.getId(), video.getTitulo(), video.getDescricao(), video.getUrl());
+		this(video.getId(), video.getTitulo(), video.getDescricao(), video.getUrl(), video.getCategoria().getId());
 	}
 }

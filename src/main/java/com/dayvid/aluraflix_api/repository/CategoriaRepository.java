@@ -4,8 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dayvid.aluraflix_api.model.Categoria;
 
+import jakarta.validation.constraints.NotBlank;
+
 public interface CategoriaRepository extends JpaRepository<Categoria, Long>{
 
-	boolean findByTituloIgnoreCase(String titulo);
+	boolean existsByTituloIgnoreCase(String titulo);
 
 }

@@ -21,9 +21,11 @@ public class CategoriaService {
 
 	@Transactional
 	public DadosCategoriaDTO salvarCategoria(CategoriaDTO dados) {
-		if (repository.findByTituloIgnoreCase(dados.titulo())) {
+
+		if (repository.existsByTituloIgnoreCase(dados.titulo())) {
 			throw new ObjetoDuplicadoException("Esta categoria já existe");
 		}
+
 		var categoria = new Categoria(dados);
 		repository.save(categoria);
 		return new DadosCategoriaDTO(categoria);
@@ -46,7 +48,7 @@ public class CategoriaService {
 	@Transactional
 	public CategoriaDTO atualizarCategoria(DadosCategoriaDTO dadosCategoria) {
 		if (!repository.existsById(dadosCategoria.id())) {
-			throw new ObjetoNaoEncontadoException("Categoria não encontrada");
+			throw new ObjetoNaoEncontadoException("Categoria não encontrada com ID: " + dadosCategoria.id());
 		}
 
 		var categoria = repository.getReferenceById(dadosCategoria.id());

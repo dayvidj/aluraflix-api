@@ -1,6 +1,7 @@
 package com.dayvid.aluraflix_api.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,40 +11,46 @@ import com.dayvid.aluraflix_api.exception.ObjetoNaoEncontadoException;
 import com.dayvid.aluraflix_api.model.DadosVideoDTO;
 import com.dayvid.aluraflix_api.model.Video;
 import com.dayvid.aluraflix_api.model.VideoDTO;
+import com.dayvid.aluraflix_api.repository.CategoriaRepository;
 import com.dayvid.aluraflix_api.repository.VideoRepository;
 
 @Service
 public class VideoService {
 
 	@Autowired
-	private VideoRepository repository;
+	private VideoRepository videoRepository;
+
+	@Autowired
+	private CategoriaRepository categoriaRepository;
 
 	@Transactional
 	public VideoDTO salvarVideo(VideoDTO video) {
-		repository.save(new Video(video));
+		var categoria = categoriaRepository.getReferenceById(Optional.ofNullable(video.categoriaId()).orElse(1L));
+
+		videoRepository.save(new Video(video, categoria));
 		return video;
 	}
 
 	@Transactional(readOnly = true)
 	public List<DadosVideoDTO> listarTodosVideos() {
-		return repository.findAll().stream().map(DadosVideoDTO::new).toList();
+		return videoRepository.findAll().stream().map(DadosVideoDTO::new).toList();
 	}
 
 	@Transactional(readOnly = true)
 	public VideoDTO buscarVideo(Long id) {
-		if (!repository.existsById(id)) {
+		if (!videoRepository.existsById(id)) {
 			throw new ObjetoNaoEncontadoException("Video não encontrado");
 		}
-		return new VideoDTO(repository.getReferenceById(id));
+		return new VideoDTO(videoRepository.getReferenceById(id));
 	}
 
 	@Transactional
 	public VideoDTO atualizarVideo(DadosVideoDTO dadosVideo) {
-		if (!repository.existsById(dadosVideo.id())) {
+		if (!videoRepository.existsById(dadosVideo.id())) {
 			throw new ObjetoNaoEncontadoException("Video não encontrado");
 		}
 
-		var video = repository.getReferenceById(dadosVideo.id());
+		var video = videoRepository.getReferenceById(dadosVideo.id());
 		video.atualizarDados(dadosVideo);
 
 		return new VideoDTO(video);
@@ -51,10 +58,10 @@ public class VideoService {
 
 	@Transactional
 	public String deletarVideo(Long id) {
-		if (!repository.existsById(id)) {
+		if (!videoRepository.existsById(id)) {
 			throw new ObjetoNaoEncontadoException("Video não encontrado");
 		}
-		repository.deleteById(id);
+		videoRepository.deleteById(id);
 		return "Video deletado com sucesso.";
 	}
 

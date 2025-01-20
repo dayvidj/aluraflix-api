@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,10 +25,16 @@ public class Video {
 	private String descricao;
 	private String url;
 
-	public Video(VideoDTO video) {
+	@ManyToOne
+	@JoinColumn(name = "categoria_id")
+	private Categoria categoria;
+	
+	/*(fetch = FetchType.LAZY)*/
+	public Video(VideoDTO video, Categoria categoria) {
 		this.descricao = video.descricao();
 		this.titulo = video.titulo();
 		this.url = video.url();
+		this.categoria = categoria;
 	}
 
 	public void atualizarDados(DadosVideoDTO dados) {
