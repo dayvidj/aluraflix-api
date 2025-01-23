@@ -24,11 +24,12 @@ public class VideoService {
 	private CategoriaRepository categoriaRepository;
 
 	@Transactional
-	public VideoDTO salvarVideo(VideoDTO video) {
-		var categoria = categoriaRepository.getReferenceById(Optional.ofNullable(video.categoriaId()).orElse(1L));
+	public DadosVideoDTO salvarVideo(VideoDTO dadosVideo) {
+		var categoria = categoriaRepository.getReferenceById(Optional.ofNullable(dadosVideo.categoriaId()).orElse(1L));
+		var video = new Video(dadosVideo, categoria);
 
-		videoRepository.save(new Video(video, categoria));
-		return video;
+		videoRepository.save(video);
+		return new DadosVideoDTO(video);
 	}
 
 	@Transactional(readOnly = true)
@@ -38,29 +39,32 @@ public class VideoService {
 
 	@Transactional(readOnly = true)
 	public VideoDTO buscarVideo(Long id) {
-		if (!videoRepository.existsById(id)) {
-			throw new ObjetoNaoEncontadoException("Video não encontrado");
-		}
-		return new VideoDTO(videoRepository.getReferenceById(id));
+		var video = videoRepository.findById(id)
+				.orElseThrow(() -> new ObjetoNaoEncontadoException("Video não encontrado"));
+
+		return new VideoDTO(video);
+	}
+
+	@Transactional(readOnly = true)
+	public VideoDTO buscarVideoPorTitulo(String titulo) {
+		var video = videoRepository.findByTitulo(titulo);
+		return new VideoDTO(video);
 	}
 
 	@Transactional
 	public VideoDTO atualizarVideo(DadosVideoDTO dadosVideo) {
-		if (!videoRepository.existsById(dadosVideo.id())) {
-			throw new ObjetoNaoEncontadoException("Video não encontrado");
-		}
+		var video = videoRepository.findById(dadosVideo.id())
+				.orElseThrow(() -> new ObjetoNaoEncontadoException("Video não encontrado"));
 
-		var video = videoRepository.getReferenceById(dadosVideo.id());
 		video.atualizarDados(dadosVideo);
-
 		return new VideoDTO(video);
 	}
 
 	@Transactional
 	public String deletarVideo(Long id) {
-		if (!videoRepository.existsById(id)) {
-			throw new ObjetoNaoEncontadoException("Video não encontrado");
-		}
+		videoRepository.findById(id)
+				.orElseThrow(() -> new ObjetoNaoEncontadoException("Video não encontrado com ID " + id));
+
 		videoRepository.deleteById(id);
 		return "Video deletado com sucesso.";
 	}

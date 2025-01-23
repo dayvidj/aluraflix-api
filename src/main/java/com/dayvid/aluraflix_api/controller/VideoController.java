@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dayvid.aluraflix_api.model.DadosVideoDTO;
@@ -28,7 +29,7 @@ public class VideoController {
 	private VideoService service;
 
 	@PostMapping
-	public ResponseEntity<VideoDTO> criarVideo(@RequestBody @Valid VideoDTO dadosVideo) {
+	public ResponseEntity<DadosVideoDTO> criarVideo(@RequestBody @Valid VideoDTO dadosVideo) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.salvarVideo(dadosVideo));
 	}
 
@@ -40,6 +41,11 @@ public class VideoController {
 	@GetMapping("/{id}")
 	public ResponseEntity<VideoDTO> exibirVideoPorId(@PathVariable Long id) {
 		return ResponseEntity.ok(service.buscarVideo(id));
+	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<VideoDTO> exibirVideoPorTitulo(@RequestParam String titulo){
+		return ResponseEntity.ok(service.buscarVideoPorTitulo(titulo));
 	}
 
 	@PutMapping
