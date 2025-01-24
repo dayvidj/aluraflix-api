@@ -47,6 +47,11 @@ public class VideoController {
 	public ResponseEntity<VideoDTO> exibirVideoPorTitulo(@RequestParam String titulo){
 		return ResponseEntity.ok(service.buscarVideoPorTitulo(titulo));
 	}
+	
+	@GetMapping("/categoria/{id}")
+	public ResponseEntity<List<VideoDTO>> exibirVideosPorCategoria(@PathVariable Long id){
+		return ResponseEntity.ok(service.buscarVideoPorCategoria(id));
+	}
 
 	@PutMapping
 	public ResponseEntity<VideoDTO> updateVideo(@RequestBody @Valid DadosVideoDTO dadosVideo) {

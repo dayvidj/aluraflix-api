@@ -50,6 +50,12 @@ public class VideoService {
 		var video = videoRepository.findByTitulo(titulo);
 		return new VideoDTO(video);
 	}
+	
+	@Transactional(readOnly = true)
+	public List<VideoDTO> buscarVideoPorCategoria(Long id) {
+		var videos = videoRepository.findByCategoriaId(id);
+		return videos.stream().map(VideoDTO::new).toList();
+	}
 
 	@Transactional
 	public VideoDTO atualizarVideo(DadosVideoDTO dadosVideo) {
@@ -68,5 +74,6 @@ public class VideoService {
 		videoRepository.deleteById(id);
 		return "Video deletado com sucesso.";
 	}
+
 
 }
