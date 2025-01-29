@@ -1,9 +1,10 @@
 package com.dayvid.aluraflix_api.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +32,10 @@ public class VideoService {
 		videoRepository.save(video);
 		return new DadosVideoDTO(video);
 	}
-
+	
 	@Transactional(readOnly = true)
-	public List<DadosVideoDTO> listarTodosVideos() {
-		return videoRepository.findAll().stream().map(DadosVideoDTO::new).toList();
+	public Page<DadosVideoDTO> listarTodosVideos(Pageable pageable) {
+		return videoRepository.findAll(pageable).map(DadosVideoDTO::new);
 	}
 
 	@Transactional(readOnly = true)
@@ -52,9 +53,9 @@ public class VideoService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<VideoDTO> buscarVideoPorCategoria(Long id) {
-		var videos = videoRepository.findByCategoriaId(id);
-		return videos.stream().map(VideoDTO::new).toList();
+	public Page<VideoDTO> buscarVideoPorCategoria(Long id, Pageable pageable) {
+		var videos = videoRepository.findByCategoriaId(id, pageable);
+		return videos.map(VideoDTO::new);
 	}
 
 	@Transactional
